@@ -54,6 +54,10 @@ module sound
 	input      [15:0] dma_readdata,
 	output     [15:0] dma_writedata,
 
+	input       [7:0] mgmt_address,
+	input             mgmt_read,
+	output     [15:0] mgmt_readdata,
+
 	//sound output
 	output reg [15:0] sample_l,
 	output reg [15:0] sample_r,
@@ -153,6 +157,10 @@ opl3 #(50000000) opl
 	.dout(opl_dout),
 	.we(opl_we & ~cms_wr),
 	.rd((sb_read || fm_read) && (address == 8)),
+
+	.mgmt_address      (mgmt_address),
+	.mgmt_read         (mgmt_read),
+	.mgmt_readdata     (mgmt_readdata),
 
 	.sample_l(sample_from_opl_l),
 	.sample_r(sample_from_opl_r)

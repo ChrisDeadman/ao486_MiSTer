@@ -120,10 +120,12 @@ wire        dma_16bit;
 wire [15:0] mgmt_fdd_readdata;
 wire [15:0] mgmt_ide0_readdata;
 wire [15:0] mgmt_ide1_readdata;
+wire [15:0] mgmt_sound_readdata;
 wire        mgmt_ide0_cs;
 wire        mgmt_ide1_cs;
 wire        mgmt_fdd_cs;
 wire        mgmt_rtc_cs;
+wire        mgmt_sound_cs;
 
 wire        interrupt_done;
 wire        interrupt_do;
@@ -602,6 +604,10 @@ sound sound
 	.dma_readdata      (dma_sb_req_16 ? dma_sb_readdata_16 : dma_sb_readdata_8),
 	.dma_writedata     (dma_sb_writedata),
 
+	.mgmt_address      (mgmt_address[7:0]),
+	.mgmt_read         (mgmt_read & mgmt_sound_cs),
+	.mgmt_readdata     (mgmt_sound_readdata),
+
 	.sample_l          (sound_sample_l),
 	.sample_r          (sound_sample_r),
 
@@ -742,10 +748,11 @@ always @* begin
 	interrupt[15] = irq_15;
 end
 
+assign mgmt_sound_cs = (mgmt_address[15:8] == 8'hA0);
 assign mgmt_ide0_cs  = (mgmt_address[15:8] == 8'hF0);
 assign mgmt_ide1_cs  = (mgmt_address[15:8] == 8'hF1);
 assign mgmt_fdd_cs   = (mgmt_address[15:8] == 8'hF2);
 assign mgmt_rtc_cs   = (mgmt_address[15:8] == 8'hF4);
-assign mgmt_readdata = mgmt_ide0_cs ? mgmt_ide0_readdata : mgmt_ide1_cs ? mgmt_ide1_readdata : mgmt_fdd_readdata;
+assign mgmt_readdata = mgmt_ide0_cs ? mgmt_ide0_readdata : mgmt_ide1_cs ? mgmt_ide1_readdata : mgmt_sound_cs ? mgmt_sound_readdata : mgmt_fdd_readdata;
 
 endmodule

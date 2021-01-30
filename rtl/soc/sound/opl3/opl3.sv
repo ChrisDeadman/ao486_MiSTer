@@ -42,6 +42,10 @@ module opl3
 	input                we,
 	input                rd,
 
+	input          [7:0] mgmt_address,
+	input                mgmt_read,
+	output        [15:0] mgmt_readdata,
+
 	output signed [15:0] sample_l,
 	output signed [15:0] sample_r
 );
@@ -148,7 +152,8 @@ end
 
 //------------------------------------------------------------------------------
 
-opl3sw #(OPLCLK) opl3
+/*
+opl3fm #(OPLCLK) opl3
 (
     .reset(~rst_n),
 
@@ -160,6 +165,20 @@ opl3sw #(OPLCLK) opl3
     .clk(clk_opl),
     .left(sample_l),
     .right(sample_r)
+);
+*/
+opl3sw opl3
+(
+    .reset(~rst_n),
+    .clk(clk),
+
+    .addr(addr),
+    .din(din),
+    .wr(write),
+
+    .mgmt_address(mgmt_address),
+    .mgmt_read(mgmt_read),
+    .mgmt_readdata(mgmt_readdata)
 );
 
 endmodule

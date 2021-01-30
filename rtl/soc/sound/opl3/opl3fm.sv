@@ -49,7 +49,7 @@
 // Improved reset stability and firmware portability by Sorgelig.
 // 
 
-module opl3sw #(parameter OPLCLK = 50000000)
+module opl3fm #(parameter OPLCLK = 50000000)
 (
 	input         reset,
 
